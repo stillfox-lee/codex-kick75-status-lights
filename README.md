@@ -490,7 +490,9 @@ Hook 客户端只保留：
 提示词、工具参数和工具输出正文不会写入状态文件或后台日志。菜单栏应用与后台服务只通过当前用户可
 访问的 Unix socket 和权限为 `0600` 的配置文件通信。
 
-HID 协议细节见 [docs/PROTOCOL.md](docs/PROTOCOL.md)。
+已验证的灯光协议见 [docs/PROTOCOL.md](docs/PROTOCOL.md)。NuPhyIO 对 Kick75 IO 暴露的键位、旋钮、
+宏、灯光、休眠、模式和维护能力，以及对应的命令空间与风险边界，见
+[docs/NUPHYIO_CAPABILITY_MAP.md](docs/NUPHYIO_CAPABILITY_MAP.md)。
 
 ## 开发与测试
 
@@ -536,6 +538,7 @@ make build-app
 ├── scripts/install.py         # 构建、安装、配置、诊断和卸载入口
 ├── tests/                     # Python 单元与协议测试
 ├── docs/PROTOCOL.md           # Kick75 HID 协议说明
+├── docs/NUPHYIO_CAPABILITY_MAP.md # NuPhyIO 能力与命令地图
 ├── Makefile
 ├── CHANGELOG.md
 └── README.md
