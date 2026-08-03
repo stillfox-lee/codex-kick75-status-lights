@@ -14,7 +14,7 @@ final class SettingsViewModel: ObservableObject {
 
     private let store: SettingsStore
     private let client: DaemonClient
-    private var timer: Timer?
+    private var pollingTask: Task<Void, Never>?
 
     init(store: SettingsStore = SettingsStore(), client: DaemonClient = DaemonClient()) {
         self.store = store
@@ -66,16 +66,18 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func startPolling() {
-        refresh()
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.refresh() }
+        pollingTask?.cancel()
+        pollingTask = Task { [weak self] in
+            while !Task.isCancelled {
+                self?.refresh()
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+            }
         }
     }
 
     func stopPolling() {
-        timer?.invalidate()
-        timer = nil
+        pollingTask?.cancel()
+        pollingTask = nil
     }
 
     func reloadFromDisk() {

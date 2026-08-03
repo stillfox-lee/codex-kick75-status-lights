@@ -175,6 +175,14 @@ def build_app() -> Path:
         raise RuntimeError(
             "swift not found; install Xcode Command Line Tools with: xcode-select --install"
         )
+    sdk = subprocess.run(
+        ["xcrun", "--sdk", "macosx", "--show-sdk-path"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    build_environment = os.environ.copy()
+    build_environment["SDKROOT"] = sdk
     command = [
         swift,
         "build",
@@ -185,12 +193,13 @@ def build_app() -> Path:
         "--package-path",
         str(MACOS_PACKAGE_DIR),
     ]
-    subprocess.run(command, check=True)
+    subprocess.run(command, check=True, env=build_environment)
     result = subprocess.run(
         command + ["--show-bin-path"],
         check=True,
         capture_output=True,
         text=True,
+        env=build_environment,
     )
     executable = Path(result.stdout.strip()) / MACOS_APP_EXECUTABLE
     if not executable.is_file():

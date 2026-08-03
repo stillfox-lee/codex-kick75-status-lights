@@ -47,7 +47,7 @@ struct ContentView: View {
                 }
                 .padding(16)
             }
-            .frame(maxHeight: 520)
+            .frame(height: 500)
             Divider()
             controls
         }
